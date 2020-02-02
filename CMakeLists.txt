@@ -8,6 +8,7 @@ project (CoRoutinesExamples
     LANGUAGES CXX)
 
 
+# Simple resumable type
 add_executable (resumable_type resumable_type.cpp)
 set_target_properties (resumable_type PROPERTIES
     CXX_STANDARD 20
@@ -16,3 +17,14 @@ set_target_properties (resumable_type PROPERTIES
 )
 target_compile_options (resumable_type PRIVATE -stdlib=libc++)
 target_link_libraries (resumable_type PRIVATE -stdlib=libc++)
+
+
+# Return a value from a coroutine
+add_executable (return_value return_value.cpp)
+set_target_properties (return_value PROPERTIES
+    CXX_STANDARD 20
+    CXX_STANDARD_REQUIRED YES
+    CXX_EXTENSIONS NO
+)
+target_compile_options (return_value PRIVATE -stdlib=libc++)
+target_link_libraries (return_value PRIVATE -stdlib=libc++)
