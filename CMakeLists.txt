@@ -28,3 +28,13 @@ set_target_properties (return_value PROPERTIES
 )
 target_compile_options (return_value PRIVATE -stdlib=libc++)
 target_link_libraries (return_value PRIVATE -stdlib=libc++)
+
+# Coroutine generator
+add_executable (generator generator.cpp)
+set_target_properties (generator PROPERTIES
+    CXX_STANDARD 20
+    CXX_STANDARD_REQUIRED YES
+    CXX_EXTENSIONS NO
+)
+target_compile_options (generator PRIVATE -stdlib=libc++)
+target_link_libraries (generator PRIVATE -stdlib=libc++)
