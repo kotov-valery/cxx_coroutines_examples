@@ -33,3 +33,9 @@
 
 # CMake build folder
 build
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.pdf
