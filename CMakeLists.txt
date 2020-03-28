@@ -38,3 +38,13 @@ set_target_properties (generator PROPERTIES
 )
 target_compile_options (generator PRIVATE -stdlib=libc++)
 target_link_libraries (generator PRIVATE -stdlib=libc++)
+
+# Async operation with coroutine
+add_executable (asyncop asyncop.cpp)
+set_target_properties (asyncop PROPERTIES
+    CXX_STANDARD 20
+    CXX_STANDARD_REQUIRED YES
+    CXX_EXTENSIONS NO
+)
+target_compile_options (asyncop PRIVATE -stdlib=libc++)
+target_link_libraries (asyncop PRIVATE -stdlib=libc++ -pthread)
