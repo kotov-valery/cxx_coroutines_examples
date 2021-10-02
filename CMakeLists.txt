@@ -1,6 +1,7 @@
-# For now works only with clang:
-# CXX=/usr/bin/clang++-9 CC=/usr/bin/clang-9 cmake ..
 cmake_minimum_required (VERSION 3.15)
+
+set (CMAKE_C_COMPILER clang)
+set (CMAKE_CXX_COMPILER clang++)
 
 project (CoRoutinesExamples
     VERSION 1.0
