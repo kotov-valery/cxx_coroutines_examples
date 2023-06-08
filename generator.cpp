@@ -1,11 +1,11 @@
-#include <experimental/coroutine>
+#include <coroutine>
 #include <iostream>
 #include <cassert>
 
 class resumable {
 public:
     struct promise_type;
-    using coroutine_handle = std::experimental::coroutine_handle<promise_type>;
+    using coroutine_handle = std::coroutine_handle<promise_type>;
 
     resumable(coroutine_handle handle) : handle_(handle) { assert(handle_); }
     resumable(resumable&) = delete;
@@ -25,19 +25,19 @@ private:
 };
 
 struct resumable::promise_type {
-    using coroutine_handle = std::experimental::coroutine_handle<promise_type>;
+    using coroutine_handle = std::coroutine_handle<promise_type>;
 
     const char* string_ = nullptr;
 
     auto get_return_object() {
         return coroutine_handle::from_promise(*this);
     }
-    auto initial_suspend() { return std::experimental::suspend_always(); }
-    auto final_suspend() { return std::experimental::suspend_always(); }
+    auto initial_suspend() { return std::suspend_always(); }
+    auto final_suspend() noexcept { return std::suspend_always(); }
     void return_void() {}
     auto yield_value(const char* string) {
         string_ = string;
-        return std::experimental::suspend_always();
+        return std::suspend_always();
     }
     void unhandled_exception() {
         std::terminate();

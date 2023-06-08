@@ -1,7 +1,8 @@
 #include<cassert>
 
-#include <experimental/coroutine>
+#include <coroutine>
 #include <future>
+#include <thread>
 
 #include <mutex>
 #include <condition_variable>
@@ -10,8 +11,6 @@
 
 #include <iostream>
 
-using namespace std::experimental;
-
 bool ready_ = false;
 std::mutex mutex_ = {};
 std::condition_variable condition_ = {};
@@ -19,7 +18,7 @@ std::condition_variable condition_ = {};
 class async_coroutine  {
 public:
     struct promise_type;
-    using coroutine_handle = std::experimental::coroutine_handle<promise_type>;
+    using coroutine_handle = std::coroutine_handle<promise_type>;
 
     async_coroutine(coroutine_handle handle): handle_(handle) { assert(handle_); }
     async_coroutine(async_coroutine&) = delete;
@@ -42,10 +41,10 @@ struct async_operation
 {
     std::promise<int> promise_ = {};
     std::future<int> operation_ = {};
-    std::experimental::coroutine_handle<async_coroutine::promise_type> handle_ = {};
+    std::coroutine_handle<async_coroutine::promise_type> handle_ = {};
 
     bool await_ready() { return false; }
-    void await_suspend(std::experimental::coroutine_handle<async_coroutine::promise_type> handle) {
+    void await_suspend(std::coroutine_handle<async_coroutine::promise_type> handle) {
         std::cout << "\tSuspend the coroutine on thread " << std::this_thread::get_id() << "\n"
                   << "\tWich means:\n" <<
                         "\t *start an async operation on a different thread\n" <<
@@ -85,15 +84,15 @@ struct async_operation
 };
 
 struct async_coroutine::promise_type {
-    using coroutine_handle = std::experimental::coroutine_handle<promise_type>;
+    using coroutine_handle = std::coroutine_handle<promise_type>;
 
     int value_;
 
     auto get_return_object() {
         return coroutine_handle::from_promise(*this);
     }
-    auto initial_suspend() { return std::experimental::suspend_never(); }
-    auto final_suspend() { return std::experimental::suspend_always(); }
+    auto initial_suspend() { return std::suspend_never(); }
+    auto final_suspend() noexcept { return std::suspend_always(); }
     void return_value(int value) { value_ = value; }
     void unhandled_exception() { std::terminate(); }
 };

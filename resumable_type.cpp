@@ -1,11 +1,11 @@
-#include <experimental/coroutine>
+#include <coroutine>
 #include <iostream>
 #include <cassert>
 
 class resumable {
 public:
     struct promise_type;
-    using coroutine_handle = std::experimental::coroutine_handle<promise_type>;
+    using coroutine_handle = std::coroutine_handle<promise_type>;
 
     resumable(coroutine_handle handle) : handle_(handle) { assert(handle_); }
     resumable(resumable&) = delete;
@@ -23,12 +23,12 @@ private:
 };
 
 struct resumable::promise_type {
-    using coroutine_handle = std::experimental::coroutine_handle<promise_type>;
+    using coroutine_handle = std::coroutine_handle<promise_type>;
     auto get_return_object() {
         return coroutine_handle::from_promise(*this);
     }
-    auto initial_suspend() { return std::experimental::suspend_always(); }
-    auto final_suspend() { return std::experimental::suspend_always(); }
+    auto initial_suspend() { return std::suspend_always(); }
+    auto final_suspend() noexcept { return std::suspend_always(); }
     void return_void() {}
     void unhandled_exception() {
         std::terminate();
@@ -37,7 +37,7 @@ struct resumable::promise_type {
 
 resumable foo(){
     std::cout << "Hello" << std::endl;
-    co_await std::experimental::suspend_always();
+    co_await std::suspend_always();
     std::cout << "World" << std::endl;
 }
 
